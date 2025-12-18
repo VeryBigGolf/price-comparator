@@ -6,6 +6,3 @@ A simple web app to compare merchandise values and find the lowest price per uni
 
 **Why I built this:**
 I got annoyed when I was buying toothpaste and trying to calculate which one was actually cheaper using a normal calculator app. It was a hassle, so I built this tool to solve that problem instantly.
-
-**Tech Stack:**
-* HTML, JS, Tailwind CSS
