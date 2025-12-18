@@ -159,6 +159,33 @@
             box-shadow: 0 0 0 3px rgba(136, 57, 239, 0.2);
         }
         
+        .input-group {
+            background-color: var(--bg-surface0);
+            border: 2px solid var(--bg-surface1);
+            transition: all 0.2s ease;
+        }
+        
+        .input-group:focus-within {
+            border-color: var(--accent-mauve);
+            box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.2);
+        }
+        
+        .latte .input-group:focus-within {
+            box-shadow: 0 0 0 3px rgba(136, 57, 239, 0.2);
+        }
+        
+        .input-group input,
+        .input-group select {
+            background-color: transparent;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+        }
+        
+        .input-group-separator {
+            border-left: 1px solid var(--bg-surface1);
+        }
+        
         .card {
             background-color: var(--bg-mantle);
             border: 2px solid var(--bg-surface1);
@@ -397,17 +424,17 @@
                     <label class="block text-sm mb-2 opacity-70">
                         <i class="ph ph-ruler"></i> Size per Item
                     </label>
-                    <div class="flex overflow-hidden rounded-xl">
+                    <div class="input-group flex rounded-xl overflow-hidden">
                         <input 
                             type="number" 
                             id="productSize" 
                             inputmode="decimal"
-                            class="input-field flex-1 min-w-0 px-4 py-3 rounded-l-xl rounded-r-none text-base border-r-0"
+                            class="flex-1 min-w-0 px-4 py-3 text-base"
                             step="0.01"
                             min="0"
                             required
                         >
-                        <select id="productUnit" class="select-field w-24 flex-shrink-0 px-3 py-3 rounded-r-xl rounded-l-none text-base border-l-0">
+                        <select id="productUnit" class="input-group-separator w-24 flex-shrink-0 px-3 py-3 text-base cursor-pointer">
                             <optgroup label="Volume">
                                 <option value="L">L</option>
                                 <option value="ml" selected>ml</option>
@@ -537,17 +564,17 @@
                     <label class="block text-sm mb-2 opacity-70">
                         <i class="ph ph-ruler"></i> Size per Item
                     </label>
-                    <div class="flex overflow-hidden rounded-xl">
+                    <div class="input-group flex rounded-xl overflow-hidden">
                         <input 
                             type="number" 
                             id="editProductSize" 
                             inputmode="decimal"
-                            class="input-field flex-1 min-w-0 px-4 py-3 rounded-l-xl rounded-r-none text-base border-r-0"
+                            class="flex-1 min-w-0 px-4 py-3 text-base"
                             step="0.01"
                             min="0"
                             required
                         >
-                        <select id="editProductUnit" class="select-field w-24 flex-shrink-0 px-3 py-3 rounded-r-xl rounded-l-none text-base border-l-0">
+                        <select id="editProductUnit" class="input-group-separator w-24 flex-shrink-0 px-3 py-3 text-base cursor-pointer">
                             <optgroup label="Volume">
                                 <option value="L">L</option>
                                 <option value="ml">ml</option>
