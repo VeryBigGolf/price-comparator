@@ -9,4 +9,3 @@ I got annoyed when I was buying toothpaste and trying to calculate which one was
 
 **Tech Stack:**
 * HTML, JS, Tailwind CSS
-* **Catppuccin Theme** (Chose this simply because I love this color palette so much!)
