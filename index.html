@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en" class="mocha">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Value Comparator</title>
+    
+    <!-- Google Fonts: JetBrains Mono + Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Kanit', 'monospace'],
+                    },
+                    colors: {
+                        // Catppuccin Mocha
+                        mocha: {
+                            rosewater: '#f5e0dc',
+                            flamingo: '#f2cdcd',
+                            pink: '#f5c2e7',
+                            mauve: '#cba6f7',
+                            red: '#f38ba8',
+                            maroon: '#eba0ac',
+                            peach: '#fab387',
+                            yellow: '#f9e2af',
+                            green: '#a6e3a1',
+                            teal: '#94e2d5',
+                            sky: '#89dceb',
+                            sapphire: '#74c7ec',
+                            blue: '#89b4fa',
+                            lavender: '#b4befe',
+                            text: '#cdd6f4',
+                            subtext1: '#bac2de',
+                            subtext0: '#a6adc8',
+                            overlay2: '#9399b2',
+                            overlay1: '#7f849c',
+                            overlay0: '#6c7086',
+                            surface2: '#585b70',
+                            surface1: '#45475a',
+                            surface0: '#313244',
+                            base: '#1e1e2e',
+                            mantle: '#181825',
+                            crust: '#11111b',
+                        },
+                        // Catppuccin Latte
+                        latte: {
+                            rosewater: '#dc8a78',
+                            flamingo: '#dd7878',
+                            pink: '#ea76cb',
+                            mauve: '#8839ef',
+                            red: '#d20f39',
+                            maroon: '#e64553',
+                            peach: '#fe640b',
+                            yellow: '#df8e1d',
+                            green: '#40a02b',
+                            teal: '#179299',
+                            sky: '#04a5e5',
+                            sapphire: '#209fb5',
+                            blue: '#1e66f5',
+                            lavender: '#7287fd',
+                            text: '#4c4f69',
+                            subtext1: '#5c5f77',
+                            subtext0: '#6c6f85',
+                            overlay2: '#7c7f93',
+                            overlay1: '#8c8fa1',
+                            overlay0: '#9ca0b0',
+                            surface2: '#acb0be',
+                            surface1: '#bcc0cc',
+                            surface0: '#ccd0da',
+                            base: '#eff1f5',
+                            mantle: '#e6e9ef',
+                            crust: '#dce0e8',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-green': '0 0 20px rgba(166, 227, 161, 0.4), 0 0 40px rgba(166, 227, 161, 0.2)',
+                        'glow-green-latte': '0 0 20px rgba(64, 160, 43, 0.3), 0 0 40px rgba(64, 160, 43, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            font-family: 'JetBrains Mono', 'Kanit', monospace;
+        }
+        
+        /* Mocha Theme Variables */
+        .mocha {
+            --bg-base: #1e1e2e;
+            --bg-mantle: #181825;
+            --bg-crust: #11111b;
+            --bg-surface0: #313244;
+            --bg-surface1: #45475a;
+            --bg-surface2: #585b70;
+            --text-main: #cdd6f4;
+            --text-sub: #a6adc8;
+            --accent-mauve: #cba6f7;
+            --accent-blue: #89b4fa;
+            --accent-green: #a6e3a1;
+            --accent-peach: #fab387;
+            --accent-pink: #f5c2e7;
+            --accent-red: #f38ba8;
+            --overlay0: #6c7086;
+        }
+        
+        /* Latte Theme Variables */
+        .latte {
+            --bg-base: #eff1f5;
+            --bg-mantle: #e6e9ef;
+            --bg-crust: #dce0e8;
+            --bg-surface0: #ccd0da;
+            --bg-surface1: #bcc0cc;
+            --bg-surface2: #acb0be;
+            --text-main: #4c4f69;
+            --text-sub: #6c6f85;
+            --accent-mauve: #8839ef;
+            --accent-blue: #1e66f5;
+            --accent-green: #40a02b;
+            --accent-peach: #fe640b;
+            --accent-pink: #ea76cb;
+            --accent-red: #d20f39;
+            --overlay0: #9ca0b0;
+        }
+        
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .input-field {
+            background-color: var(--bg-surface0);
+            border: 2px solid var(--bg-surface1);
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        
+        .input-field:focus {
+            border-color: var(--accent-mauve);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.2);
+        }
+        
+        .latte .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(136, 57, 239, 0.2);
+        }
+        
+        .card {
+            background-color: var(--bg-mantle);
+            border: 2px solid var(--bg-surface1);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+        
+        .card.best-value {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 25px rgba(166, 227, 161, 0.3), 0 0 50px rgba(166, 227, 161, 0.1);
+        }
+        
+        .latte .card.best-value {
+            box-shadow: 0 0 25px rgba(64, 160, 43, 0.25), 0 0 50px rgba(64, 160, 43, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-mauve), var(--accent-blue));
+            color: var(--bg-crust);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(203, 166, 247, 0.4);
+        }
+        
+        .btn-delete {
+            background-color: var(--bg-surface0);
+            color: var(--accent-red);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-delete:hover {
+            background-color: var(--accent-red);
+            color: var(--bg-crust);
+        }
+        
+        .theme-toggle {
+            background-color: var(--bg-surface0);
+            color: var(--accent-peach);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--bg-surface1);
+            transform: rotate(180deg);
+        }
+        
+        .badge {
+            background: linear-gradient(135deg, var(--accent-green), #7ee07a);
+            color: var(--bg-crust);
+        }
+        
+        .latte .badge {
+            background: linear-gradient(135deg, var(--accent-green), #5cb85c);
+        }
+        
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        .select-field {
+            background-color: var(--bg-surface0);
+            border: 2px solid var(--bg-surface1);
+            color: var(--text-main);
+        }
+        
+        .select-field:focus {
+            border-color: var(--accent-mauve);
+            outline: none;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-mantle);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-surface2);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-mauve);
+        }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card {
+            animation: slideIn 0.3s ease forwards;
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-mauve));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-gradient {
+            background: linear-gradient(135deg, var(--accent-mauve), var(--accent-blue), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Terminal-style decorations */
+        .terminal-bar {
+            background-color: var(--bg-crust);
+            border-bottom: 1px solid var(--bg-surface0);
+        }
+        
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Terminal-style Header Bar -->
+    <div class="terminal-bar px-4 py-2 flex items-center gap-2 sticky top-0 z-50">
+        <div class="terminal-dot" style="background-color: var(--accent-red);"></div>
+        <div class="terminal-dot" style="background-color: var(--accent-peach);"></div>
+        <div class="terminal-dot" style="background-color: var(--accent-green);"></div>
+        <span class="ml-4 text-sm opacity-60">~/shopping-comparator</span>
+        <div class="ml-auto">
+            <button onclick="toggleTheme()" class="theme-toggle p-2 rounded-xl" title="Toggle Theme">
+                <i class="ph-bold ph-sun-dim text-xl" id="theme-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                <span class="header-gradient">
+                    <i class="ph-bold ph-shopping-cart"></i> Value Comparator
+                </span>
+            </h1>
+            <p class="text-sm opacity-60">
+                <i class="ph ph-terminal-window"></i> Find the best deal per unit
+            </p>
+        </header>
+
+        <!-- Input Form -->
+        <div class="card rounded-2xl p-6 mb-8">
+            <div class="flex items-center gap-2 mb-6">
+                <i class="ph-bold ph-plus-circle text-2xl" style="color: var(--accent-mauve);"></i>
+                <h2 class="text-lg font-semibold">Add Product</h2>
+            </div>
+            
+            <form id="productForm" class="space-y-4">
+                <!-- Product Name -->
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">
+                        <i class="ph ph-tag"></i> Product Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="productName" 
+                        class="input-field w-full px-4 py-3 rounded-xl text-base"
+                        required
+                    >
+                </div>
+                
+                <!-- Price & Quantity Row -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-currency-circle-dollar"></i> Price (฿)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="productPrice" 
+                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-stack"></i> Quantity
+                        </label>
+                        <input 
+                            type="number" 
+                            id="productQty" 
+                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            min="1"
+                            value="1"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <!-- Size & Unit Row -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-ruler"></i> Size per Item
+                        </label>
+                        <input 
+                            type="number" 
+                            id="productSize" 
+                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-scales"></i> Unit
+                        </label>
+                        <select id="productUnit" class="select-field w-full px-4 py-3 rounded-xl text-base">
+                            <optgroup label="Volume">
+                                <option value="L">Liters (L)</option>
+                                <option value="ml" selected>Milliliters (ml)</option>
+                            </optgroup>
+                            <optgroup label="Weight">
+                                <option value="kg">Kilograms (kg)</option>
+                                <option value="g">Grams (g)</option>
+                            </optgroup>
+                            <optgroup label="Count">
+                                <option value="pcs">Pieces (pcs)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="btn-primary w-full py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2"
+                >
+                    <i class="ph-bold ph-plus"></i>
+                    Add to Compare
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="space-y-4 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="ph-bold ph-chart-bar" style="color: var(--accent-blue);"></i>
+                    Comparison Results
+                </h2>
+                <button 
+                    onclick="clearAll()" 
+                    class="btn-delete px-4 py-2 rounded-xl text-sm flex items-center gap-2"
+                >
+                    <i class="ph-bold ph-trash"></i>
+                    Clear All
+                </button>
+            </div>
+            
+            <div id="productList" class="space-y-4">
+                <!-- Products will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-16 opacity-50">
+            <i class="ph-light ph-package text-6xl mb-4 block" style="color: var(--accent-mauve);"></i>
+            <p class="text-lg">No products added yet</p>
+            <p class="text-sm">Add products above to compare their value</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 py-6 opacity-40 text-sm">
+            <p>
+                <i class="ph ph-code"></i> Built with 
+                <span style="color: var(--accent-pink);">♥</span> 
+                using Catppuccin
+            </p>
+        </footer>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color: rgba(0,0,0,0.7);">
+        <div class="card rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" style="background-color: var(--bg-base);">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-2">
+                    <i class="ph-bold ph-pencil-simple text-2xl" style="color: var(--accent-peach);"></i>
+                    <h2 class="text-lg font-semibold">Edit Product</h2>
+                </div>
+                <button onclick="closeEditModal()" class="p-2 rounded-xl hover:bg-opacity-50" style="background-color: var(--bg-surface0);">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="editForm" class="space-y-4">
+                <input type="hidden" id="editProductId">
+                
+                <!-- Product Name -->
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">
+                        <i class="ph ph-tag"></i> Product Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="editProductName" 
+                        class="input-field w-full px-4 py-3 rounded-xl text-base"
+                        required
+                    >
+                </div>
+                
+                <!-- Price & Quantity Row -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-currency-circle-dollar"></i> Price (฿)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="editProductPrice" 
+                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-stack"></i> Quantity
+                        </label>
+                        <input 
+                            type="number" 
+                            id="editProductQty" 
+                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            min="1"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <!-- Size & Unit Row -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-ruler"></i> Size per Item
+                        </label>
+                        <input 
+                            type="number" 
+                            id="editProductSize" 
+                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2 opacity-70">
+                            <i class="ph ph-scales"></i> Unit
+                        </label>
+                        <select id="editProductUnit" class="select-field w-full px-4 py-3 rounded-xl text-base">
+                            <optgroup label="Volume">
+                                <option value="L">Liters (L)</option>
+                                <option value="ml">Milliliters (ml)</option>
+                            </optgroup>
+                            <optgroup label="Weight">
+                                <option value="kg">Kilograms (kg)</option>
+                                <option value="g">Grams (g)</option>
+                            </optgroup>
+                            <optgroup label="Count">
+                                <option value="pcs">Pieces (pcs)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-2">
+                    <button 
+                        type="button"
+                        onclick="closeEditModal()"
+                        class="flex-1 py-3 rounded-xl font-semibold text-base"
+                        style="background-color: var(--bg-surface0); color: var(--text-sub);"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="btn-primary flex-1 py-3 rounded-xl font-semibold text-base flex items-center justify-center gap-2"
+                    >
+                        <i class="ph-bold ph-check"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // State Management
+        // ============================================
+        let products = [];
+        let currentTheme = 'mocha';
+
+        // ============================================
+        // Theme Management
+        // ============================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('comparator-theme') || 'mocha';
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.className = theme;
+            localStorage.setItem('comparator-theme', theme);
+            
+            const icon = document.getElementById('theme-icon');
+            if (theme === 'mocha') {
+                icon.className = 'ph-bold ph-sun-dim text-xl';
+            } else {
+                icon.className = 'ph-bold ph-moon-stars text-xl';
+            }
+        }
+
+        function toggleTheme() {
+            const newTheme = currentTheme === 'mocha' ? 'latte' : 'mocha';
+            setTheme(newTheme);
+        }
+
+        // ============================================
+        // Data Persistence
+        // ============================================
+        function saveProducts() {
+            localStorage.setItem('comparator-products', JSON.stringify(products));
+        }
+
+        function loadProducts() {
+            const saved = localStorage.getItem('comparator-products');
+            if (saved) {
+                products = JSON.parse(saved);
+                renderProducts();
+            }
+        }
+
+        // ============================================
+        // Unit Conversion & Calculation
+        // ============================================
+        function convertToBaseUnit(size, unit) {
+            // Convert everything to base units (Liters or Kilograms or Pieces)
+            const conversions = {
+                'L': { value: size, baseUnit: 'L' },
+                'ml': { value: size / 1000, baseUnit: 'L' },
+                'kg': { value: size, baseUnit: 'kg' },
+                'g': { value: size / 1000, baseUnit: 'kg' },
+                'pcs': { value: size, baseUnit: 'pcs' }
+            };
+            return conversions[unit] || { value: size, baseUnit: unit };
+        }
+
+        function getBaseUnitLabel(unit) {
+            const labels = {
+                'L': 'Liter',
+                'ml': 'Liter',
+                'kg': 'Kilogram',
+                'g': 'Kilogram',
+                'pcs': 'Piece'
+            };
+            return labels[unit] || unit;
+        }
+
+        function calculatePricePerUnit(price, quantity, size, unit) {
+            const converted = convertToBaseUnit(size, unit);
+            const totalBaseUnits = converted.value * quantity;
+            const pricePerUnit = price / totalBaseUnits;
+            return {
+                pricePerUnit: pricePerUnit,
+                baseUnit: converted.baseUnit,
+                totalBaseUnits: totalBaseUnits
+            };
+        }
+
+        // ============================================
+        // Product Management
+        // ============================================
+        function addProduct(name, price, quantity, size, unit) {
+            const calculation = calculatePricePerUnit(price, quantity, size, unit);
+            
+            const product = {
+                id: Date.now(),
+                name: name,
+                price: parseFloat(price),
+                quantity: parseInt(quantity),
+                size: parseFloat(size),
+                unit: unit,
+                pricePerUnit: calculation.pricePerUnit,
+                baseUnit: calculation.baseUnit,
+                totalBaseUnits: calculation.totalBaseUnits
+            };
+            
+            products.push(product);
+            sortProducts();
+            saveProducts();
+            renderProducts();
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            saveProducts();
+            renderProducts();
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all products?')) {
+                products = [];
+                saveProducts();
+                renderProducts();
+            }
+        }
+
+        function sortProducts() {
+            // Group by base unit type, then sort by price per unit within each group
+            products.sort((a, b) => {
+                if (a.baseUnit !== b.baseUnit) {
+                    return a.baseUnit.localeCompare(b.baseUnit);
+                }
+                return a.pricePerUnit - b.pricePerUnit;
+            });
+        }
+
+        // ============================================
+        // Rendering
+        // ============================================
+        function renderProducts() {
+            const listEl = document.getElementById('productList');
+            const emptyEl = document.getElementById('emptyState');
+            const resultsEl = document.getElementById('resultsSection');
+            
+            if (products.length === 0) {
+                emptyEl.classList.remove('hidden');
+                resultsEl.classList.add('hidden');
+                return;
+            }
+            
+            emptyEl.classList.add('hidden');
+            resultsEl.classList.remove('hidden');
+            
+            // Find best value for each base unit type
+            const bestByUnit = {};
+            products.forEach(p => {
+                if (!bestByUnit[p.baseUnit] || p.pricePerUnit < bestByUnit[p.baseUnit].pricePerUnit) {
+                    bestByUnit[p.baseUnit] = p;
+                }
+            });
+            
+            listEl.innerHTML = products.map((product, index) => {
+                const isBest = bestByUnit[product.baseUnit]?.id === product.id;
+                const rank = index + 1;
+                const unitLabel = getBaseUnitLabel(product.unit);
+                
+                // Calculate savings compared to worst option in same category
+                const sameUnitProducts = products.filter(p => p.baseUnit === product.baseUnit);
+                const worstPrice = Math.max(...sameUnitProducts.map(p => p.pricePerUnit));
+                const savings = ((worstPrice - product.pricePerUnit) / worstPrice * 100).toFixed(1);
+                
+                return `
+                    <div class="card rounded-2xl p-5 ${isBest ? 'best-value' : ''}" style="animation-delay: ${index * 0.1}s">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-3">
+                                    ${isBest ? `
+                                        <span class="badge px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                            <i class="ph-bold ph-trophy"></i> BEST VALUE
+                                        </span>
+                                    ` : `
+                                        <span class="px-3 py-1 rounded-full text-xs font-medium" 
+                                              style="background-color: var(--bg-surface0); color: var(--text-sub);">
+                                            #${rank}
+                                        </span>
+                                    `}
+                                    <span class="text-xs opacity-50 uppercase">${product.baseUnit}</span>
+                                </div>
+                                
+                                <h3 class="font-semibold text-lg mb-2">${escapeHtml(product.name)}</h3>
+                                
+                                <div class="grid grid-cols-2 gap-2 text-sm opacity-70 mb-3">
+                                    <div>
+                                        <i class="ph ph-currency-circle-dollar"></i>
+                                        ฿${product.price.toFixed(2)}
+                                    </div>
+                                    <div>
+                                        <i class="ph ph-package"></i>
+                                        ${product.quantity}x ${product.size}${product.unit}
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-baseline gap-2">
+                                    <span class="price-tag text-2xl font-bold">
+                                        ฿${product.pricePerUnit.toFixed(2)}
+                                    </span>
+                                    <span class="text-sm opacity-50">/ ${unitLabel}</span>
+                                </div>
+                                
+                                ${!isBest && parseFloat(savings) > 0 ? `
+                                    <div class="mt-2 text-xs" style="color: var(--accent-peach);">
+                                        <i class="ph ph-arrow-up"></i> ${savings}% more expensive
+                                    </div>
+                                ` : ''}
+                                
+                                ${isBest && sameUnitProducts.length > 1 ? `
+                                    <div class="mt-2 text-xs" style="color: var(--accent-green);">
+                                        <i class="ph-bold ph-check-circle"></i> Cheapest option!
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="flex flex-col gap-2">
+                                <button 
+                                    onclick="openEditModal(${product.id})"
+                                    class="p-3 rounded-xl"
+                                    style="background-color: var(--bg-surface0); color: var(--accent-blue);"
+                                    title="Edit"
+                                >
+                                    <i class="ph-bold ph-pencil-simple text-lg"></i>
+                                </button>
+                                <button 
+                                    onclick="deleteProduct(${product.id})"
+                                    class="btn-delete p-3 rounded-xl"
+                                    title="Remove"
+                                >
+                                    <i class="ph-bold ph-x text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // Edit Modal Functions
+        // ============================================
+        function openEditModal(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductQty').value = product.quantity;
+            document.getElementById('editProductSize').value = product.size;
+            document.getElementById('editProductUnit').value = product.unit;
+            
+            const modal = document.getElementById('editModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('editProductName').focus();
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function updateProduct(id, name, price, quantity, size, unit) {
+            const index = products.findIndex(p => p.id === id);
+            if (index === -1) return;
+            
+            const calculation = calculatePricePerUnit(price, quantity, size, unit);
+            
+            products[index] = {
+                id: id,
+                name: name,
+                price: parseFloat(price),
+                quantity: parseInt(quantity),
+                size: parseFloat(size),
+                unit: unit,
+                pricePerUnit: calculation.pricePerUnit,
+                baseUnit: calculation.baseUnit,
+                totalBaseUnits: calculation.totalBaseUnits
+            };
+            
+            sortProducts();
+            saveProducts();
+            renderProducts();
+        }
+
+        // ============================================
+        // Form Handling
+        // ============================================
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('productName').value.trim();
+            const price = document.getElementById('productPrice').value;
+            const quantity = document.getElementById('productQty').value;
+            const size = document.getElementById('productSize').value;
+            const unit = document.getElementById('productUnit').value;
+            
+            if (name && price && quantity && size) {
+                addProduct(name, price, quantity, size, unit);
+                
+                // Reset form
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productQty').value = '1';
+                document.getElementById('productSize').value = '';
+                document.getElementById('productName').focus();
+            }
+        });
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = parseInt(document.getElementById('editProductId').value);
+            const name = document.getElementById('editProductName').value.trim();
+            const price = document.getElementById('editProductPrice').value;
+            const quantity = document.getElementById('editProductQty').value;
+            const size = document.getElementById('editProductSize').value;
+            const unit = document.getElementById('editProductUnit').value;
+            
+            if (name && price && quantity && size) {
+                updateProduct(id, name, price, quantity, size, unit);
+                closeEditModal();
+            }
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+
+        // ============================================
+        // Initialize App
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+            loadProducts();
+        });
+    </script>
+</body>
+</html>
