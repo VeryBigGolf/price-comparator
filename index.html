@@ -179,6 +179,14 @@
             box-shadow: 0 0 25px rgba(64, 160, 43, 0.25), 0 0 50px rgba(64, 160, 43, 0.1);
         }
         
+        .card.card-loser {
+            border-color: var(--overlay0);
+        }
+        
+        .card.card-loser:hover {
+            border-color: var(--accent-blue);
+        }
+        
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-mauve), var(--accent-blue));
             color: var(--bg-crust);
@@ -361,6 +369,7 @@
                         <input 
                             type="number" 
                             id="productPrice" 
+                            inputmode="decimal"
                             class="input-field w-full px-4 py-3 rounded-xl text-base"
                             step="0.01"
                             min="0"
@@ -374,6 +383,7 @@
                         <input 
                             type="number" 
                             id="productQty" 
+                            inputmode="decimal"
                             class="input-field w-full px-4 py-3 rounded-xl text-base"
                             min="1"
                             value="1"
@@ -382,36 +392,32 @@
                     </div>
                 </div>
                 
-                <!-- Size & Unit Row -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm mb-2 opacity-70">
-                            <i class="ph ph-ruler"></i> Size per Item
-                        </label>
+                <!-- Size & Unit Combined Input Group -->
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">
+                        <i class="ph ph-ruler"></i> Size per Item
+                    </label>
+                    <div class="flex">
                         <input 
                             type="number" 
                             id="productSize" 
-                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            inputmode="decimal"
+                            class="input-field flex-[7] px-4 py-3 rounded-l-xl rounded-r-none text-base border-r-0"
                             step="0.01"
                             min="0"
                             required
                         >
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-2 opacity-70">
-                            <i class="ph ph-scales"></i> Unit
-                        </label>
-                        <select id="productUnit" class="select-field w-full px-4 py-3 rounded-xl text-base">
+                        <select id="productUnit" class="select-field flex-[3] px-3 py-3 rounded-r-xl rounded-l-none text-base border-l-0" style="min-width: 90px;">
                             <optgroup label="Volume">
-                                <option value="L">Liters (L)</option>
-                                <option value="ml" selected>Milliliters (ml)</option>
+                                <option value="L">L</option>
+                                <option value="ml" selected>ml</option>
                             </optgroup>
                             <optgroup label="Weight">
-                                <option value="kg">Kilograms (kg)</option>
-                                <option value="g">Grams (g)</option>
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
                             </optgroup>
                             <optgroup label="Count">
-                                <option value="pcs">Pieces (pcs)</option>
+                                <option value="pcs">pcs</option>
                             </optgroup>
                         </select>
                     </div>
@@ -420,7 +426,7 @@
                 <!-- Submit Button -->
                 <button 
                     type="submit" 
-                    class="btn-primary w-full py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2"
+                    class="btn-primary w-full h-14 rounded-xl font-semibold text-base flex items-center justify-center gap-2"
                 >
                     <i class="ph-bold ph-plus"></i>
                     Add to Compare
@@ -504,6 +510,7 @@
                         <input 
                             type="number" 
                             id="editProductPrice" 
+                            inputmode="decimal"
                             class="input-field w-full px-4 py-3 rounded-xl text-base"
                             step="0.01"
                             min="0"
@@ -517,6 +524,7 @@
                         <input 
                             type="number" 
                             id="editProductQty" 
+                            inputmode="decimal"
                             class="input-field w-full px-4 py-3 rounded-xl text-base"
                             min="1"
                             required
@@ -524,36 +532,32 @@
                     </div>
                 </div>
                 
-                <!-- Size & Unit Row -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm mb-2 opacity-70">
-                            <i class="ph ph-ruler"></i> Size per Item
-                        </label>
+                <!-- Size & Unit Combined Input Group -->
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">
+                        <i class="ph ph-ruler"></i> Size per Item
+                    </label>
+                    <div class="flex">
                         <input 
                             type="number" 
                             id="editProductSize" 
-                            class="input-field w-full px-4 py-3 rounded-xl text-base"
+                            inputmode="decimal"
+                            class="input-field flex-[7] px-4 py-3 rounded-l-xl rounded-r-none text-base border-r-0"
                             step="0.01"
                             min="0"
                             required
                         >
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-2 opacity-70">
-                            <i class="ph ph-scales"></i> Unit
-                        </label>
-                        <select id="editProductUnit" class="select-field w-full px-4 py-3 rounded-xl text-base">
+                        <select id="editProductUnit" class="select-field flex-[3] px-3 py-3 rounded-r-xl rounded-l-none text-base border-l-0" style="min-width: 90px;">
                             <optgroup label="Volume">
-                                <option value="L">Liters (L)</option>
-                                <option value="ml">Milliliters (ml)</option>
+                                <option value="L">L</option>
+                                <option value="ml">ml</option>
                             </optgroup>
                             <optgroup label="Weight">
-                                <option value="kg">Kilograms (kg)</option>
-                                <option value="g">Grams (g)</option>
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
                             </optgroup>
                             <optgroup label="Count">
-                                <option value="pcs">Pieces (pcs)</option>
+                                <option value="pcs">pcs</option>
                             </optgroup>
                         </select>
                     </div>
@@ -750,7 +754,7 @@
                 const savings = ((worstPrice - product.pricePerUnit) / worstPrice * 100).toFixed(1);
                 
                 return `
-                    <div class="card rounded-2xl p-5 ${isBest ? 'best-value' : ''}" style="animation-delay: ${index * 0.1}s">
+                    <div class="card rounded-2xl p-5 ${isBest ? 'best-value' : 'card-loser'}" style="animation-delay: ${index * 0.1}s">
                         <div class="flex items-start justify-between gap-3">
                             <div class="flex-1">
                                 <div class="flex items-center gap-3 mb-3">
@@ -803,18 +807,18 @@
                             <div class="flex flex-col gap-2">
                                 <button 
                                     onclick="openEditModal(${product.id})"
-                                    class="p-3 rounded-xl"
+                                    class="min-w-[44px] min-h-[44px] p-3 rounded-xl flex items-center justify-center"
                                     style="background-color: var(--bg-surface0); color: var(--accent-blue);"
                                     title="Edit"
                                 >
-                                    <i class="ph-bold ph-pencil-simple text-lg"></i>
+                                    <i class="ph-bold ph-pencil-simple text-xl"></i>
                                 </button>
                                 <button 
                                     onclick="deleteProduct(${product.id})"
-                                    class="btn-delete p-3 rounded-xl"
+                                    class="btn-delete min-w-[44px] min-h-[44px] p-3 rounded-xl flex items-center justify-center"
                                     title="Remove"
                                 >
-                                    <i class="ph-bold ph-x text-lg"></i>
+                                    <i class="ph-bold ph-x text-xl"></i>
                                 </button>
                             </div>
                         </div>
