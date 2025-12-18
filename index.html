@@ -115,6 +115,7 @@
             --accent-pink: #f5c2e7;
             --accent-red: #f38ba8;
             --overlay0: #6c7086;
+            color-scheme: dark;
         }
         
         /* Latte Theme Variables */
@@ -134,6 +135,7 @@
             --accent-pink: #ea76cb;
             --accent-red: #d20f39;
             --overlay0: #9ca0b0;
+            color-scheme: light;
         }
         
         body {
@@ -162,24 +164,29 @@
         .input-group {
             background-color: var(--bg-surface0);
             border: 2px solid var(--bg-surface1);
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease;
         }
         
         .input-group:focus-within {
             border-color: var(--accent-mauve);
-            box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.2);
-        }
-        
-        .latte .input-group:focus-within {
-            box-shadow: 0 0 0 3px rgba(136, 57, 239, 0.2);
         }
         
         .input-group input,
         .input-group select {
-            background-color: transparent;
-            border: none;
+            background-color: transparent !important;
+            border: none !important;
             color: var(--text-main);
-            outline: none;
+            outline: none !important;
+            box-shadow: none !important;
+            -webkit-appearance: none;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            ring: none !important;
         }
         
         .input-group-separator {
@@ -276,6 +283,28 @@
         .select-field:focus {
             border-color: var(--accent-mauve);
             outline: none;
+        }
+        
+        /* Style dropdown options */
+        select,
+        select option,
+        select optgroup {
+            background-color: var(--bg-surface0);
+            color: var(--text-main);
+        }
+        
+        .mocha select,
+        .mocha select option,
+        .mocha select optgroup {
+            background-color: #313244;
+            color: #cdd6f4;
+        }
+        
+        .latte select,
+        .latte select option,
+        .latte select optgroup {
+            background-color: #ccd0da;
+            color: #4c4f69;
         }
         
         /* Custom Scrollbar */
@@ -429,12 +458,12 @@
                             type="number" 
                             id="productSize" 
                             inputmode="decimal"
-                            class="flex-1 min-w-0 px-4 py-3 text-base"
+                            class="flex-1 min-w-0 px-4 py-3 text-base outline-none focus:outline-none ring-0 focus:ring-0 border-none focus:border-none shadow-none focus:shadow-none"
                             step="0.01"
                             min="0"
                             required
                         >
-                        <select id="productUnit" class="input-group-separator w-24 flex-shrink-0 px-3 py-3 text-base cursor-pointer">
+                        <select id="productUnit" class="input-group-separator w-24 flex-shrink-0 px-3 py-3 text-base cursor-pointer outline-none focus:outline-none ring-0 focus:ring-0 border-none focus:border-none shadow-none focus:shadow-none">
                             <optgroup label="Volume">
                                 <option value="L">L</option>
                                 <option value="ml" selected>ml</option>
@@ -569,12 +598,12 @@
                             type="number" 
                             id="editProductSize" 
                             inputmode="decimal"
-                            class="flex-1 min-w-0 px-4 py-3 text-base"
+                            class="flex-1 min-w-0 px-4 py-3 text-base outline-none focus:outline-none ring-0 focus:ring-0 border-none focus:border-none shadow-none focus:shadow-none"
                             step="0.01"
                             min="0"
                             required
                         >
-                        <select id="editProductUnit" class="input-group-separator w-24 flex-shrink-0 px-3 py-3 text-base cursor-pointer">
+                        <select id="editProductUnit" class="input-group-separator w-24 flex-shrink-0 px-3 py-3 text-base cursor-pointer outline-none focus:outline-none ring-0 focus:ring-0 border-none focus:border-none shadow-none focus:shadow-none">
                             <optgroup label="Volume">
                                 <option value="L">L</option>
                                 <option value="ml">ml</option>
@@ -762,16 +791,23 @@
             emptyEl.classList.add('hidden');
             resultsEl.classList.remove('hidden');
             
-            // Find best value for each base unit type
-            const bestByUnit = {};
+            // Find minimum price per unit for each base unit type (to handle ties)
+            const minPriceByUnit = {};
             products.forEach(p => {
-                if (!bestByUnit[p.baseUnit] || p.pricePerUnit < bestByUnit[p.baseUnit].pricePerUnit) {
-                    bestByUnit[p.baseUnit] = p;
+                if (!minPriceByUnit[p.baseUnit] || p.pricePerUnit < minPriceByUnit[p.baseUnit]) {
+                    minPriceByUnit[p.baseUnit] = p.pricePerUnit;
                 }
             });
             
+            // Helper function to compare prices with tolerance for floating point
+            const isWinner = (product) => {
+                const minPrice = minPriceByUnit[product.baseUnit];
+                // Compare with small tolerance (0.001) for floating point precision
+                return Math.abs(product.pricePerUnit - minPrice) < 0.001;
+            };
+            
             listEl.innerHTML = products.map((product, index) => {
-                const isBest = bestByUnit[product.baseUnit]?.id === product.id;
+                const isBest = isWinner(product);
                 const rank = index + 1;
                 const unitLabel = getBaseUnitLabel(product.unit);
                 
