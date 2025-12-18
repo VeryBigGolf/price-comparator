@@ -1,6 +1,5 @@
-# 🛒 Shopping Value Comparator
-
-👉 **Live Demo:** [verybiggolf.github.io/price-comparator](https://verybiggolf.github.io/price-comparator/)
+# Shopping Value Comparator
+**Live Demo:** [verybiggolf.github.io/price-comparator](https://verybiggolf.github.io/price-comparator/)
 
 A simple web app to compare merchandise values and find the lowest price per unit. Just input the product name, price, quantity, and size. It will automatically calculate and highlight the best deal.
 
