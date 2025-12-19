@@ -1,5 +1,5 @@
 # Shopping Value Comparator
-**Live Demo:** [verybiggolf.github.io/price-comparator](https://verybiggolf.github.io/price-comparator/)
+-> **Live Demo:** [verybiggolf.github.io/price-comparator](https://verybiggolf.github.io/price-comparator/)
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/58744fdc-781e-451b-9556-02343c54af84" width="48%" alt="image" />
